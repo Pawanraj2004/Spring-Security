@@ -1,4 +1,4 @@
-package com.learn.spring_security;
+package com.learn.spring_security.model;
 
 
 public class Student {
