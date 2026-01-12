@@ -3,9 +3,11 @@ package com.learn.spring_security.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,7 +31,10 @@ public class SecurityConfig {
         //Disable CSRF Auth
         sec.csrf(customizer->customizer.disable());
         //Enable Authorization for each request
-        sec.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+        sec.authorizeHttpRequests(request -> request
+                .requestMatchers("/login","/register")
+                .permitAll()
+                .anyRequest().authenticated());
         //Enable form login
         sec.formLogin(Customizer.withDefaults());
         //Enable website data view for postman
@@ -46,6 +51,11 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider=new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         return  provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config){
+       return config.getAuthenticationManager();
     }
 
     //Adding users who can access - hardcoding
