@@ -15,7 +15,11 @@ public class UserService {
     private UserRepo repo;
 
     @Autowired
+    private JWTService jwtService;
+
+    @Autowired
     AuthenticationManager authenticationManager;
+
     private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);
 
     public Users register(Users user){
@@ -26,6 +30,8 @@ public class UserService {
     public String verify(Users user) {
         Authentication auth=authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-        return auth.isAuthenticated()?"SUCCESS":"FAIL";
+        if(auth.isAuthenticated())
+            return jwtService.generateToken();
+        return "FAIL";
     }
 }

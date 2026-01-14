@@ -29,18 +29,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity sec){
         //Disable CSRF Auth
-        sec.csrf(customizer->customizer.disable());
+        sec.csrf(customizer->customizer.disable())
         //Enable Authorization for each request
-        sec.authorizeHttpRequests(request -> request
+        .authorizeHttpRequests(request -> request
                 .requestMatchers("/login","/register")
                 .permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated())
         //Enable form login
-        sec.formLogin(Customizer.withDefaults());
+        //sec.formLogin(Customizer.withDefaults());
         //Enable website data view for postman
-        sec.httpBasic(Customizer.withDefaults());
+        .httpBasic(Customizer.withDefaults());
         //Make website Stateless
-        //sec.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        //.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return sec.build();
     }
